@@ -8,65 +8,18 @@ namespace Folder_Disintegrator
 
         static void Main(string[] args)
         {
+
             string path = @"C:\";
 
 
 
-            // закончить с вывидением сообщения об ошибки или некоректом вводе, так же сменить последовательность действий
-            // сначало оно должно проверить существует ли файл и можно ли его удалить а только затем спрашивать удалять или нет
-
-
-
-            while (true)
-            {
-                path += UserInput("Введите путь к папке: ");
-                if (Directory.Exists(path))
-                {
-                    Console.WriteLine("Такая папка есть: ");
-                    break;
-                }
-                else if (!Directory.Exists(path))
-                {
-                    Console.WriteLine("Такой папки не существует: ");
-                    continue;
-                }
-                else
-                {
-                    Console.WriteLine("Некорректный ввод: ");
-                    continue;
-                }
-
-            }
-
-
             Console.Write("Введите Yes если да, No если не будем удалять: ");
-
             while (true)
             {
                 string message = Console.ReadLine();
-
                 if (message != null & message == "Yes")
                 {
-                    try
-                    {
-                        UserDelete(path);
-                    }
-                    catch (System.UnauthorizedAccessException)
-                    {
-                        Console.WriteLine("У тебя здесь нет власти ");
-                    }
-                    catch (IOException)
-                    {
-                        Console.WriteLine("Уы файл занят ");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                    }
-
-
-                    Directory.Delete(path, true);
-                    Console.WriteLine("Папка удалена");
+                    Examination();
                     break;
                 }
 
@@ -82,25 +35,84 @@ namespace Folder_Disintegrator
                     continue;
                 }
             }
+
+            
         }
 
+        static string Examination()
+        {
+            string path = @"C:\";
+            while (true)
+            {
+                path = @"C:\";
+                string userInput = UserInput("Введите путь к папке: ");
+                path += userInput;
+                if (Directory.Exists(path))
+                {
+                    Console.WriteLine("Такая папка есть!");
+                    break;
+                }
+                else if (!Directory.Exists(path))
+                {
+                    Console.WriteLine("Такой папки не существует: ");
+                    Console.WriteLine(path);
+                    continue;
+                }
+                else
+                {
+                    Console.WriteLine("Некорректный ввод: ");
+                    continue;
+                }
 
-        static string UserDelete(string name)
+            }
+
+
+
+
+            while (true)
+            {
+                try
+                {
+                    UserDelete(path);
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                    Console.WriteLine("У тебя здесь нет власти ");
+                    break;
+                }
+                catch (IOException)
+                {
+                    Console.WriteLine("Уы файл занят ");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+
+
+                Directory.Delete(path, true);
+                Console.WriteLine("Папка удалена");
+                break;
+            }
+            return "Успешно удалено";
+        }
+
+        static string UserDelete(string path)
         {
 
-            foreach (string file in Directory.GetFiles(name))
+            foreach (string file in Directory.GetFiles(path))
             {
                 File.Delete(file);
             }
 
-            foreach (var path2 in Directory.GetDirectories(name))
+            foreach (var path2 in Directory.GetDirectories(path))
             {
                 UserDelete(path2);
                 Directory.Delete(path2);
             }
 
 
-            return "17";
+            return "";
         }
         static public string UserInput(string message)
         {
